@@ -10,11 +10,24 @@ var EventEmitter = require('events').EventEmitter
 var path = require('path')
 var WebSocketServer = require('ws').Server
 var JsonObjectStream = require('./lib/JsonObjectStream.js')
-var Writable = require('stream').Writable
+var Duplex = require('stream').Duplex
 var debug = require('debug')('json-explorer')
+var nomnom = require('nomnom')
+var Accumulator = require('./lib/Accumulator.js')
+var Writable = require('stream').Writable
+
+nomnom.option('layout', {
+	abbr: 'l',
+	default: 'tree',
+	help: 'which layout to use, available: tree, force'
+})
+
+var opts = nomnom.parse()
+
+var accumulator = new Accumulator()
 
 var devnull = new Writable
-devnull._write = function(chunk, enc, cb) {
+devnull._write = function(c,e,cb) {
 	cb()
 }
 
@@ -42,11 +55,14 @@ function cat(port) {
 	var container = fs.readFileSync(path.join(__dirname, 'container.html')).toString('utf8').replace('{{cache_bust}}', now)
 
 	var server = http.createServer(handler)
-	var jos = new JsonObjectStream({ rootKey: 'json-explorer' })
+	
 
 	var wss = new WebSocketServer({ server: server })
 
 	wss.on('connection', function(ws) {
+		console.log(accumulator.steps.length)
+		var jos = new JsonObjectStream()
+
 		debug('ws connection')
 
 		jos.on('object start', function(key, parentKey, level) {
@@ -75,10 +91,16 @@ function cat(port) {
 		jos.on('end', function () {
 			debug('jos end')
 			ws.close()
-			process.exit()
+			//process.exit()
 		})
 
-		process.stdin.pipe(jos).pipe(devnull)
+		//TODO refactor
+		if (accumulator.steps.length > 0) {
+			accumulator.pipe(jos).pipe(devnull)
+		} else {
+			
+			process.stdin.pipe(jos).pipe(accumulator)
+		}
 
 		ws.on('close', function() {
 			debug('ws closed')
@@ -92,7 +114,7 @@ function cat(port) {
 	if (process.platform === 'win32')
 		command = 'start'
 
-	child.exec(command + ' http://localhost:' + port)
+	child.exec(command + ' http://localhost:' + port + '?layout=' + opts.layout)
 
 	function handler(request, response) {
 

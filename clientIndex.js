@@ -2,17 +2,32 @@ var DocumentLoadedEvent = require('./lib/client/DocumentLoadedEvent.js')
 var Node = require('./lib/client/Node.js')
 var d3 = require('d3-browserify')
 var log = require('./lib/client/log.js')
+var urlParser = require('url')
+var querystring = require('querystring')
+
 var Force = require('./lib/client/layout/Force.js')
+var Tree = require('./lib/client/layout/Tree.js')
 
 DocumentLoadedEvent.onEvent(main)
 DocumentLoadedEvent.listen()
 
-
 function main() {
 
-	var force = new Force(window.innerWidth - 100, window.innerHeight - 100)
-	force.init(d3.select('body'))
-	//add(root)
+	var url = urlParser.parse(window.document.location.href)
+	url.query = querystring.parse(url.query)
+	
+	log.debug('layout: %s', url.query.layout)
+
+	// TODO move code to a factory module or something
+	var layout
+	if (url.query.layout === 'tree')
+		layout = new Tree(window.innerWidth - 100, window.innerHeight - 100)
+	else if (url.query.layout === 'force')
+		layout = new Force(window.innerWidth - 100, window.innerHeight - 100)
+	else
+		throw new Error('unknown layout ' + url.query.layout)
+	
+	layout.init(d3.select('body'))
 
 	var count = 1
 
@@ -34,9 +49,7 @@ function main() {
 			handleObject(data)
 	}
 
-	ws.onclose = function () {
-		console.log(force._nodes)
-		console.log(force._links)
+	ws.onclose = function () {		
 		console.log('close')
 	}
 
@@ -72,7 +85,7 @@ function main() {
 		n.level = data.level
 
 		n.on('new child', function (n1, n2) {
-			force.addNode(n1, n2)
+			layout.addNode(n1, n2)
 		})
 
 		if (n.id in index) {
@@ -86,16 +99,25 @@ function main() {
 	function handleObject(data) {
 		log.debug('handleObject %s <- %s', data.key, data.parentKey)
 
-		if (data.key === 'root') return
+		if (data.key === undefined) return
 
 		var current = stack.pop()
 
 		var parent = stack[stack.length - 1]
-
+		
 		current.value(data.object)
 
-		//log.debug(current.label)
-		if (parent)
-			parent.addChild(current)
+		// completed objects will never be sent again from the server, so clear them
+		delete index[current.id]
+
+		if (parent) {
+			setTimeout(addChildLater(parent, current), data.level * 1300)
+		}
+	}
+
+	function addChildLater(parent, child) {
+		return function () {
+			parent.addChild(child)
+		}
 	}
 }
