@@ -1,5 +1,7 @@
 # json explorer
 
+SUPER ALPHA!
+
 an initial attempt at building a "streaming" json object explorer
 
 ### try it out
