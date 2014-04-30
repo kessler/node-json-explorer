@@ -6,7 +6,12 @@ an initial attempt at building a "streaming" json object explorer
 
 ### try it out
 ```
-	cat my.json | node index
+	// tree layout is default
+	cat my.json | node index 
+```
+or 
+```
+	cat my.json | node index --layout force
 ```
 
 ### develop
@@ -24,8 +29,9 @@ just hack at index.js and JsonObjectStream mostly
 client code sits in lib/client
 
 ### TODO:
-* make collapsible
-* replace force layout to something else?
+* make force layout collapsible 
+* refresh isn't working properly
+* shutdown button in browser will shut down the server
 * better hover box
 
 ![screenshot](https://raw.github.com/kessler/static/master/node-json-explorer.png)
