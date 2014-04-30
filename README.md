@@ -1,16 +1,15 @@
-# node-gcat
-Pipe json from command line into a graph in your browser
+# json explorer
 
-You should take a look at [scat](https://github.com/hughsk/scat) which pipes javascript into your browser or [bcat](https://github.com/kessler/node-bcat) for a more log piping oriented module
+an initial attempt at building a "streaming" json object explorer
 
-## usage
+### try it out
 ```
- --port                   set a port for this gcat execution
+	cat my.json | node index
 ```
-- _An available port between 8080 - 8181 will be automatically picked if --port is not specified_
 
-## example
+### develop client
+
 ```
-> npm install -g gcat
-
-> echo '<hr>' | gcat
+	browserify clientIndex.js -o clientIndex.min.js
+```
+client code sits in lib/client
