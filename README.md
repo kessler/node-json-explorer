@@ -33,5 +33,8 @@ client code sits in lib/client
 * refresh isn't working properly
 * shutdown button in browser will shut down the server
 * better hover box
+* labels should move according to circle size
+* maybe replaces circles with something more meaningful 
 
-![screenshot](https://raw.github.com/kessler/static/master/node-json-explorer.png)
+![force](https://raw.github.com/kessler/static/master/node-json-explorer.png)
+![tree](https://raw.github.com/kessler/static/master/node-json-explorer-tree.png)
