@@ -29,6 +29,7 @@ just hack at index.js and JsonObjectStream mostly
 client code sits in lib/client
 
 ### TODO:
+* add zoom and panning
 * make force layout collapsible 
 * refresh isn't working properly
 * shutdown button in browser will shut down the server
