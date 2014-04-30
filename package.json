@@ -1,0 +1,35 @@
+{
+  "name": "json-explorer",
+  "version": "0.0.1",
+  "description": "explore json objects in your browser",
+  "main": "index.js",
+  "bin": {
+    "json-explorer": "index.js"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kessler/node-json-explorer"
+  },
+  "keywords": [
+    "pipe",
+    "browser",
+    "cat",
+    "json-explorer"
+  ],
+  "author": "Yaniv Kessler",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kessler/node-json-explorer/issues"
+  },
+  "dependencies": {
+    "d3-tip": "kessler/d3-tip",
+    "d3-browserify": "^3.3.13",
+    "debug": "^0.8.0",
+    "find-port": "1.0.0",
+    "rc": "~0.3.3",
+    "ws": "^0.4.31"
+  }
+}
