@@ -22,3 +22,10 @@ just hack at index.js and JsonObjectStream mostly
 ```
 
 client code sits in lib/client
+
+### TODO:
+* make collapsible
+* replace force layout to something else?
+* better hover box
+
+![screenshot](https://raw.github.com/kessler/static/master/node-json-explorer.png)
