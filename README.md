@@ -9,9 +9,16 @@ an initial attempt at building a "streaming" json object explorer
 	cat my.json | node index
 ```
 
-### develop client
+### develop
+
+#### server
+
+just hack at index.js and JsonObjectStream mostly
+
+#### client
 
 ```
 	browserify clientIndex.js -o clientIndex.min.js
 ```
+
 client code sits in lib/client
