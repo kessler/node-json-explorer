@@ -109,6 +109,11 @@ function main() {
 
 		// completed objects will never be sent again from the server, so clear them
 		delete index[current.id]
+		
+		current.fullyLoaded = true
+
+		if (data.level >= 2)
+			current.toggle()
 
 		if (parent) {
 			setTimeout(addChildLater(parent, current), data.level * 1300)

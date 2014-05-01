@@ -13,7 +13,7 @@ var JsonObjectStream = require('./lib/JsonObjectStream.js')
 var Duplex = require('stream').Duplex
 var debug = require('debug')('json-explorer')
 var nomnom = require('nomnom')
-var Accumulator = require('./lib/Accumulator.js')
+var ReplayStream = require('./lib/ReplayStream.js')
 var Writable = require('stream').Writable
 
 nomnom.option('layout', {
@@ -24,7 +24,7 @@ nomnom.option('layout', {
 
 var opts = nomnom.parse()
 
-var accumulator = new Accumulator()
+var replayStream = new ReplayStream()
 
 var devnull = new Writable
 devnull._write = function(c,e,cb) {
@@ -59,8 +59,7 @@ function cat(port) {
 
 	var wss = new WebSocketServer({ server: server })
 
-	wss.on('connection', function(ws) {
-		console.log(accumulator.steps.length)
+	wss.on('connection', function(ws) {		
 		var jos = new JsonObjectStream()
 
 		debug('ws connection')
@@ -95,11 +94,11 @@ function cat(port) {
 		})
 
 		//TODO refactor
-		if (accumulator.steps.length > 0) {
-			accumulator.pipe(jos).pipe(devnull)
+		if (replayStream.steps.length > 0) {
+			replayStream.pipe(jos).pipe(devnull)
 		} else {
 			
-			process.stdin.pipe(jos).pipe(accumulator)
+			process.stdin.pipe(jos).pipe(replayStream)
 		}
 
 		ws.on('close', function() {
