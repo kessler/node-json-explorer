@@ -15,18 +15,18 @@ function main() {
 
 	var url = urlParser.parse(window.document.location.href)
 	url.query = querystring.parse(url.query)
-	
+
 	log.debug('layout: %s', url.query.layout)
 
 	// TODO move code to a factory module or something
 	var layout
 	if (url.query.layout === 'tree')
-		layout = new Tree(window.innerWidth - 100, window.innerHeight - 100)
+		layout = new Tree(window.innerWidth - 50, window.innerHeight - 50)
 	else if (url.query.layout === 'force')
-		layout = new Force(window.innerWidth - 100, window.innerHeight - 100)
+		layout = new Force(window.innerWidth - 50, window.innerHeight - 50)
 	else
 		throw new Error('unknown layout ' + url.query.layout)
-	
+
 	layout.init(d3.select('body'))
 
 	var count = 1
@@ -49,7 +49,7 @@ function main() {
 			handleObject(data)
 	}
 
-	ws.onclose = function () {		
+	ws.onclose = function () {
 		console.log('close')
 	}
 
@@ -63,8 +63,6 @@ function main() {
 
 	function handleObjectStart(data) {
 		log.debug('handleObjectStart %s <- %s', data.key, data.parentKey)
-
-		//if (data.key === 'root') return
 
 		var parent = stack[stack.length - 1]
 
@@ -104,12 +102,12 @@ function main() {
 		var current = stack.pop()
 
 		var parent = stack[stack.length - 1]
-		
+
 		current.value(data.object)
 
 		// completed objects will never be sent again from the server, so clear them
 		delete index[current.id]
-		
+
 		current.fullyLoaded = true
 
 		if (data.level >= 2)
