@@ -25,12 +25,12 @@
     "url": "https://github.com/kessler/node-json-explorer/issues"
   },
   "dependencies": {
-    "d3-tip": "kessler/d3-tip",
     "d3-browserify": "^3.3.13",
-    "debug": "^0.8.0",
+    "d3-tip": "kessler/d3-tip",
+    "debug": "^3.1.0",
     "find-port": "1.0.0",
+    "nomnom": "~1.6.2",
     "rc": "~0.3.3",
-    "ws": "^0.4.31",
-    "nomnom": "~1.6.2"
+    "ws": "^0.4.31"
   }
 }
