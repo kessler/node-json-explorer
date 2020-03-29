@@ -1,4 +1,4 @@
-# json explorer
+# json explorer [ABANDONED]
 
 SUPER ALPHA!
 
